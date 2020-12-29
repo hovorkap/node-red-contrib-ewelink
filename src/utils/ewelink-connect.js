@@ -46,7 +46,7 @@ module.exports = {
   initializeDeviceNode(RED, node, config, method, params) {
     // Clean up device ID
     const deviceId = msg.deviceId ? msg.deviceId.trim() : (config.deviceId ? config.deviceId.trim() : '');
-
+node.error(deviceId);
     // Log in to eWeLink
     this.ready(RED, node, config).then(connection => {
       // Once logged in we can listen to inputs
