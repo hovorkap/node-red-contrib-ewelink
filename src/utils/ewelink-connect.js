@@ -63,7 +63,7 @@ node.error(deviceId);
           node.send({ payload: result });
         }).catch(error => node.error(error, evaluatedParams));
       })
-    }).catch(error => node.error(error));
+    }).catch(error => node.error("demente"));
   },
 
   /**
