@@ -45,7 +45,7 @@ module.exports = {
    */
   initializeDeviceNode(RED, node, config, method, params) {
     // Clean up device ID
-    const deviceId = config.deviceId ? config.deviceId.trim() : '';
+    const deviceId = msg.payload.deviceId || config.deviceId ? config.deviceId.trim() : '';
 
     // Log in to eWeLink
     this.ready(RED, node, config).then(connection => {
