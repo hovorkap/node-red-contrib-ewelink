@@ -1,7 +1,7 @@
 module.exports = {
   /**
    * Ready promise.
-   * 
+   *
    * @param {object} RED The NodeRED instance.
    * @param {object} node The current node.
    * @param {object} config The node configuration.
@@ -36,7 +36,7 @@ module.exports = {
 
   /**
    * Initialize device node.
-   * 
+   *
    * @param {object} RED The NodeRED instance.
    * @param {object} node The current node.
    * @param {object} config The node configuration.
@@ -45,30 +45,32 @@ module.exports = {
    */
   initializeDeviceNode(RED, node, config, method, params) {
     // Clean up device ID
-    const deviceId = msg.deviceId ? msg.deviceId.trim() : (config.deviceId ? config.deviceId.trim() : '');
-node.error(deviceId);
+    const configDeviceId = config.deviceId ? config.deviceId.trim() : '';
+
     // Log in to eWeLink
     this.ready(RED, node, config).then(connection => {
       // Once logged in we can listen to inputs
       node.on('input', (msg) => {
+        // Override device id if available
+        const deviceId = msg.deviceId ? msg.deviceId.trim() : configDeviceId;
         // Get method name and build params
         const evaluatedMethod = method || msg.payload.method;
         const evaluatedParams = (typeof params === 'function' ? params(msg) : params) || msg.payload.params || [];
-        
+
         // First parameter should be always the device ID
         evaluatedParams.unshift(deviceId);
 
         // Call dynamically the method
         connection[evaluatedMethod].apply(connection, evaluatedParams).then(result => {
           node.send({ payload: result });
-        }).catch(error => node.error(error, evaluatedParams));
+        }).catch(error => node.error(error));
       })
-    }).catch(error => node.error("demente"));
+    }).catch(error => node.error(error));
   },
 
   /**
    * Set node status to 'connecting'.
-   * 
+   *
    * @param {object} node The node which status will be changed.
    */
   setNodeStatusToConnecting(node) {
@@ -81,7 +83,7 @@ node.error(deviceId);
 
   /**
    * Set node status to 'connected'.
-   * 
+   *
    * @param {object} node The node which status will be changed.
    */
   setNodeStatusToConnected(node) {
@@ -94,7 +96,7 @@ node.error(deviceId);
 
   /**
    * Set node status to 'disconnected'.
-   * 
+   *
    * @param {object} node The node which status will be changed.
    */
   setNodeStatusToDisconnected(node) {
